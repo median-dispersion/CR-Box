@@ -1,0 +1,18 @@
+// Pin configuration
+#define SPEED_POTENTIOMETER_PIN      A0
+#define DURATION_POTENTIOMETER_PIN   A2
+#define DUTY_CYCLE_POTENTIOMETER_PIN A4
+#define FAN_SPEED_CONTROL_PIN        9
+
+// Potentiometer configuration
+#define POTENTIOMETER_SAMPLE_COUNT   128
+#define POTENTIOMETER_INVERTED_STATE false
+#define POTENTIOMETER_LOWER_DEADBAND 32
+#define POTENTIOMETER_UPPER_DEADBAND 970
+
+// Fan configuration
+#define FAN_MINIMUM_SPEED 30
+#define FAN_MAXIMUM_SPEED 100
+
+// Serial configuration
+#define SERIAL_BAUD_RATE 9600
