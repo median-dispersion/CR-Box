@@ -1,4 +1,5 @@
 #include "Fan.h"
+#include "Constants.h"
 
 // ================================================================================================
 // Constructor
@@ -29,10 +30,10 @@ Fan::Fan(
   TCCR1B |= (1 << CS10);
 
   // Set TOP for 25 kHz
-  ICR1 = 639;
+  ICR1 = MAXIMUM_25_KHZ_DUTY_CYCLE_VALUE;
 
   // Set inital duty cycle
-  OCR1A = 0;
+  OCR1A = MINIMUM_25_KHZ_DUTY_CYCLE_VALUE;
 
 }
 
@@ -42,10 +43,10 @@ Fan::Fan(
 void Fan::setSpeed(uint8_t speed) {
 
   // Check if speed is set to 0 %
-  if (speed <= 0) {
+  if (speed <= MINIMUM_PERCENT_VALUE) {
 
     // Turn off fan
-    OCR1A = 0;
+    OCR1A = MINIMUM_25_KHZ_DUTY_CYCLE_VALUE;
 
     // Return
     return;
@@ -53,16 +54,36 @@ void Fan::setSpeed(uint8_t speed) {
   }
 
   // Constrain the speed to a range of 0 to 100 %
-  speed = constrain(speed, 0, 100);
+  speed = constrain(
+    speed,
+    MINIMUM_PERCENT_VALUE,
+    MAXIMUM_PERCENT_VALUE
+  );
 
   // Map the provided speed to the allowed speed range
-  speed = map(speed, 0, 100, _minimumSpeed, _maximumSpeed);
+  speed = map(
+    speed,
+    MINIMUM_PERCENT_VALUE,
+    MAXIMUM_PERCENT_VALUE,
+    _minimumSpeed,
+    _maximumSpeed
+  );
 
   // Map the speed to a duty cycle
-  uint16_t dutyCycle = map(speed, 0, 100, 0, 639);
+  uint16_t dutyCycle = map(
+    speed,
+    MINIMUM_PERCENT_VALUE,
+    MAXIMUM_PERCENT_VALUE,
+    MINIMUM_25_KHZ_DUTY_CYCLE_VALUE,
+    MAXIMUM_25_KHZ_DUTY_CYCLE_VALUE
+  );
 
   // Constrain the duty cycle to a safe range
-  dutyCycle = constrain(dutyCycle, 0, 639);
+  dutyCycle = constrain(
+    dutyCycle,
+    MINIMUM_25_KHZ_DUTY_CYCLE_VALUE,
+    MAXIMUM_25_KHZ_DUTY_CYCLE_VALUE
+  );
 
   // Set the duty cycle
   OCR1A = dutyCycle;

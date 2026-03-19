@@ -1,4 +1,5 @@
 #include "Potentiometer.h"
+#include "Constants.h"
 
 // ================================================================================================
 // Insertion sort (https://en.wikipedia.org/wiki/Insertion_sort#Implementation)
@@ -129,23 +130,42 @@ uint16_t Potentiometer::read() {
   uint16_t reading = getIQRMean(samples, _sampleCount);
 
   // Clamp the mean reading to the lower and upper dead band
-  reading = constrain(reading, _lowerDeadband, _upperDeadband);
+  reading = constrain(
+    reading,
+    _lowerDeadband,
+    _upperDeadband
+  );
 
   // Check if reading is inverted
   if (_inverted) {
 
     // Map the clamped mean value to a range of 0 - 1023 (inverted)
-    reading = map(reading, _lowerDeadband, _upperDeadband, 1023, 0);
+    reading = map(
+      reading,
+      _lowerDeadband,
+      _upperDeadband,
+      MAXIMUM_10_BIT_VALUE, 
+      MINIMUM_10_BIT_VALUE
+    );
   
   } else {
 
     // Map the clamped mean value to a range of 0 - 1023
-    reading = map(reading, _lowerDeadband, _upperDeadband, 0, 1023);
+    reading = map(reading,
+      _lowerDeadband,
+      _upperDeadband,
+      MINIMUM_10_BIT_VALUE,
+      MAXIMUM_10_BIT_VALUE
+    );
 
   }
 
   // Constrain the reading to a range from 0 to 1023
-  reading = constrain(reading, 0, 1023);
+  reading = constrain(
+    reading,
+    MINIMUM_10_BIT_VALUE,
+    MAXIMUM_10_BIT_VALUE
+  );
 
   // Return the reading
   return reading;
