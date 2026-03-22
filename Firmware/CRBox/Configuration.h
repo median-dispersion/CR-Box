@@ -1,8 +1,8 @@
 // Pin configuration
-#define SPEED_POTENTIOMETER_PIN    A0
-#define ON_TIME_POTENTIOMETER_PIN  A2
-#define OFF_TIME_POTENTIOMETER_PIN A4
-#define FAN_SPEED_CONTROL_PIN      9
+#define SPEED_POTENTIOMETER_PIN    A0 // Must be an analog pin!
+#define ON_TIME_POTENTIOMETER_PIN  A2 // Must be an analog pin!
+#define OFF_TIME_POTENTIOMETER_PIN A4 // Must be an analog pin!
+#define FAN_SPEED_CONTROL_PIN      9  // Must be pin 9!
 
 // Potentiometer configuration
 #define POTENTIOMETER_SAMPLE_COUNT   128
@@ -11,7 +11,7 @@
 #define POTENTIOMETER_UPPER_DEADBAND 970
 
 // Fan configuration
-#define FAN_MINIMUM_SPEED_PERCENT 30
+#define FAN_MINIMUM_SPEED_PERCENT 0
 #define FAN_MAXIMUM_SPEED_PERCENT 100
 
 // On and off time configuration

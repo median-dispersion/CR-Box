@@ -1,19 +1,41 @@
 #include "Fan.h"
 #include "Constants.h"
+#include "Configuration.h"
 
 // ================================================================================================
 // Constructor
 // ================================================================================================
 Fan::Fan(
-  uint8_t minimumSpeed,
-  uint8_t maximumSpeed
+  const uint8_t minimumSpeed,
+  const uint8_t maximumSpeed
 ):
-  _minimumSpeed(minimumSpeed),
-  _maximumSpeed(maximumSpeed)
-{
+  _minimumSpeed(
+    constrain(
+      minimumSpeed,
+      MINIMUM_PERCENT_VALUE,
+      MAXIMUM_PERCENT_VALUE
+    )
+  ),
+  _maximumSpeed(
+    constrain(
+      maximumSpeed,
+      MINIMUM_PERCENT_VALUE,
+      MAXIMUM_PERCENT_VALUE
+    )
+  ),
+  _speed(MAXIMUM_8_BIT_VALUE)
+{}
+
+// ================================================================================================
+// Initialize fan control
+// ================================================================================================
+void Fan::begin() {
 
   // Set pin mode
-  pinMode(9, OUTPUT);
+  pinMode(
+    FAN_SPEED_CONTROL_PIN,
+    OUTPUT
+  );
 
   // Clear control registers
   TCCR1A = 0;
@@ -32,37 +54,54 @@ Fan::Fan(
   // Set TOP for 25 kHz
   ICR1 = MAXIMUM_25_KHZ_DUTY_CYCLE_VALUE;
 
-  // Set inital duty cycle
-  OCR1A = MINIMUM_25_KHZ_DUTY_CYCLE_VALUE;
+  // Set the fan speed to 0 %
+  setSpeed(MINIMUM_PERCENT_VALUE);
 
 }
 
 // ================================================================================================
 // Set the fan speed
 // ================================================================================================
-void Fan::setSpeed(uint8_t speed) {
+void Fan::setSpeed(const uint8_t speed) {
 
-  // Check if speed is set to 0 %
-  if (speed <= MINIMUM_PERCENT_VALUE) {
+  // If new speed it equal to current speed
+  if (speed == _speed) {
 
-    // Turn off fan
-    OCR1A = MINIMUM_25_KHZ_DUTY_CYCLE_VALUE;
-
-    // Return
+    // Return early
     return;
 
   }
 
+  // Check if the fan speed is set to 0 %
+  if (speed <= MINIMUM_PERCENT_VALUE) {
+
+    // Turn off the fan
+    analogWrite(
+      FAN_SPEED_CONTROL_PIN,
+      MINIMUM_25_KHZ_DUTY_CYCLE_VALUE
+    );
+
+    // Update current speed
+    _speed = MINIMUM_PERCENT_VALUE;
+
+    // Return early
+    return;
+
+  }
+
+  // Update current speed
+  _speed = speed;
+
   // Constrain the speed to a range of 0 to 100 %
-  speed = constrain(
-    speed,
+  _speed = constrain(
+    _speed,
     MINIMUM_PERCENT_VALUE,
     MAXIMUM_PERCENT_VALUE
   );
 
-  // Map the provided speed to the allowed speed range
-  speed = map(
-    speed,
+  // Map the speed to the allowed speed range
+  _speed = map(
+    _speed,
     MINIMUM_PERCENT_VALUE,
     MAXIMUM_PERCENT_VALUE,
     _minimumSpeed,
@@ -71,7 +110,7 @@ void Fan::setSpeed(uint8_t speed) {
 
   // Map the speed to a duty cycle
   uint16_t dutyCycle = map(
-    speed,
+    _speed,
     MINIMUM_PERCENT_VALUE,
     MAXIMUM_PERCENT_VALUE,
     MINIMUM_25_KHZ_DUTY_CYCLE_VALUE,
@@ -86,6 +125,9 @@ void Fan::setSpeed(uint8_t speed) {
   );
 
   // Set the duty cycle
-  OCR1A = dutyCycle;
+  analogWrite(
+    FAN_SPEED_CONTROL_PIN,
+    dutyCycle
+  );
 
 }

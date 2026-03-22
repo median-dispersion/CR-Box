@@ -86,24 +86,32 @@ uint16_t getIQRMean(
 // Constructor
 // ================================================================================================
 Potentiometer::Potentiometer(
-  uint8_t pin,
-  uint8_t sampleCount,
-  bool inverted,
-  uint16_t lowerDeadband,
-  uint16_t upperDeadband
+  const uint8_t pin,
+  const uint8_t sampleCount,
+  const bool inverted,
+  const uint16_t lowerDeadband,
+  const uint16_t upperDeadband
 ):
   _pin(pin),
-  _sampleCount(sampleCount),
+  _sampleCount(
+    constrain(
+      sampleCount,
+      1,
+      MAXIMUM_8_BIT_VALUE
+    )
+  ),
   _inverted(inverted),
   _lowerDeadband(lowerDeadband),
   _upperDeadband(upperDeadband)
-{
+{}
 
-  // Set the pin mode
+// ================================================================================================
+// Initialize potentiometer
+// ================================================================================================
+void Potentiometer::begin() {
+
+  // Set pin mode
   pinMode(_pin, INPUT);
-
-  // Constrain the sample count to atleast 1 sample
-  _sampleCount = constrain(_sampleCount, 1, 255);
 
 }
 

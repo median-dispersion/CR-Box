@@ -8,15 +8,17 @@ class Fan {
   public:
 
     Fan(
-      uint8_t minimumSpeed = 25,
-      uint8_t maximumSpeed = 100
+      const uint8_t minimumSpeed,
+      const uint8_t maximumSpeed
     );
-    void setSpeed(uint8_t speed);
+    void begin();
+    void setSpeed(const uint8_t speed);
 
   private:
 
-    uint8_t _minimumSpeed;
-    uint8_t _maximumSpeed;
+    const uint8_t _minimumSpeed;
+    const uint8_t _maximumSpeed;
+    uint8_t _speed;
 
 };
 

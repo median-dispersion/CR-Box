@@ -34,7 +34,7 @@ Potentiometer offTimePotentiometer(
   POTENTIOMETER_UPPER_DEADBAND
 );
 
-// Fans
+// Create a fan object to control the fans via PWM
 Fan fans(
   FAN_MINIMUM_SPEED_PERCENT,
   FAN_MAXIMUM_SPEED_PERCENT
@@ -55,8 +55,16 @@ uint64_t timer;
 // ================================================================================================
 void setup() {
 
-  // Set up serial configuration
+  // Initialize serial communication
   Serial.begin(SERIAL_BAUD_RATE);
+
+  // Initialize the potentiometers
+  speedPotentiometer.begin();
+  onTimePotentiometer.begin();
+  offTimePotentiometer.begin();
+
+  // Initialize the fans
+  fans.begin();
 
   // Get the fan speed
   uint8_t speedPercent = map(

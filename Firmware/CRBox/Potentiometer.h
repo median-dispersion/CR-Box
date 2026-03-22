@@ -8,21 +8,22 @@ class Potentiometer {
   public:
 
     Potentiometer(
-      uint8_t pin,
-      uint8_t sampleCount = 128,
-      bool inverted = false,
-      uint16_t lowerDeadband = 32,
-      uint16_t upperDeadband = 992
+      const uint8_t pin,
+      const uint8_t sampleCount = 128,
+      const bool inverted = false,
+      const uint16_t lowerDeadband = 32,
+      const uint16_t upperDeadband = 992
     );
+    void begin();
     uint16_t read();
 
   private:
 
-    uint8_t _pin;
-    uint8_t _sampleCount;
-    bool _inverted;
-    uint16_t _lowerDeadband;
-    uint16_t _upperDeadband;
+    const uint8_t _pin;
+    const uint8_t _sampleCount;
+    const bool _inverted;
+    const uint16_t _lowerDeadband;
+    const uint16_t _upperDeadband;
 
 };
 
