@@ -119,11 +119,11 @@ void loop() {
   );
 
   // Get the on and of time in minutes based on the select index
-  uint16_t onTimeMinutes = ON_TIME_STEPS_MINUTES[onTimeIndex];
-  uint16_t offTimeMinutes = OFF_TIME_STEPS_MINUTES[offTimeIndex];
+  uint64_t onTimeMilliseconds = ON_TIME_STEPS_MINUTES[onTimeIndex] * 60000;
+  uint64_t offTimeMilliseconds = OFF_TIME_STEPS_MINUTES[offTimeIndex] * 60000;
 
-  // Check if the on or off time is set to 0 minutes
-  if (onTimeMinutes == 0 || offTimeMinutes == 0) {
+  // Check if the on or off time is set to 0
+  if (onTimeMilliseconds == 0 || offTimeMilliseconds == 0) {
 
     // Immediately set the fan speed
     fans.setSpeed(speedPercent);
@@ -144,7 +144,7 @@ void loop() {
       fans.setSpeed(speedPercent);
 
       // Check if the on time duration has been reached
-      if (millis() - timer >= onTimeMinutes * 60000) {
+      if (millis() - timer >= onTimeMilliseconds) {
 
         // Set the running flag to false and update the timer
         running = false;
@@ -159,7 +159,7 @@ void loop() {
       fans.setSpeed(MINIMUM_PERCENT_VALUE);
 
       // Check if the off time duration has been reached
-      if (millis() - timer >= offTimeMinutes * 60000) {
+      if (millis() - timer >= offTimeMilliseconds) {
 
         // Set the running flag to true and update the timer
         running = true;
